@@ -13,4 +13,7 @@ fi
 # Run any pending migrations
 npx prisma migrate deploy
 
+# Seed admin user (idempotent — safe to run every boot)
+npx ts-node --project tsconfig.json prisma/seed.ts || echo "Seed failed (non-fatal)"
+
 exec node server.js

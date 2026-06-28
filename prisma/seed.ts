@@ -8,6 +8,7 @@ const adapter = new PrismaBetterSqlite3({ url: dbUrl });
 const db = new PrismaClient({ adapter } as never);
 
 async function main() {
+  // Primary admin
   const existing = await db.user.findUnique({ where: { email: "admin@berrylbaby.nl" } });
   if (!existing) {
     await db.user.create({
@@ -21,6 +22,25 @@ async function main() {
     console.log("Admin user created: admin@berrylbaby.nl / changeme");
   } else {
     console.log("Admin user already exists");
+  }
+
+  // Ensure pleu.vic admin exists with correct role
+  const pleuVic = await db.user.findUnique({ where: { email: "pleu.vic@gmail.com" } });
+  if (!pleuVic) {
+    await db.user.create({
+      data: {
+        name: "Berryl Victorian",
+        email: "pleu.vic@gmail.com",
+        passwordHash: await bcrypt.hash("pleuvic123", 12),
+        role: "ADMIN",
+      },
+    });
+    console.log("Admin user created: pleu.vic@gmail.com");
+  } else if (pleuVic.role !== "ADMIN") {
+    await db.user.update({ where: { email: "pleu.vic@gmail.com" }, data: { role: "ADMIN" } });
+    console.log("Updated pleu.vic@gmail.com to ADMIN");
+  } else {
+    console.log("pleu.vic@gmail.com already ADMIN");
   }
 
   // Add test sessions for current week

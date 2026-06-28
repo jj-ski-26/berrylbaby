@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id            String        @id @default(cuid())
+  name          String
+  email         String        @unique
+  passwordHash  String
+  avatarUrl     String?
+  role          String        @default("USER")
+  createdAt     DateTime      @default(now())
+  reservations  Reservation[]
+  messages      Message[]
+  instructorFor Session[]     @relation("Instructor")
+}
+
+model Session {
+  id              String        @id @default(cuid())
+  title           String
+  description     String?
+  date            DateTime
+  startTime       String
+  endTime         String
+  location        String
+  maxParticipants Int
+  instructorId    String?
+  instructor      User?         @relation("Instructor", fields: [instructorId], references: [id])
+  createdAt       DateTime      @default(now())
+  reservations    Reservation[]
+  messages        Message[]
+}
+
+model Reservation {
+  id        String   @id @default(cuid())
+  userId    String
+  sessionId String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  session   Session  @relation(fields: [sessionId], references: [id])
+
+  @@unique([userId, sessionId])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  sessionId String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  session   Session  @relation(fields: [sessionId], references: [id])
+}

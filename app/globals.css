@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #9b6745;
+  --color-bg: #ffffff;
+  --color-text: #666666;
+  --color-pink: #e29393;
+  --color-green: #c2e2bf;
+  --color-blue: #86afbf;
+  --color-purple: #bfa1c6;
+  --font-vidaloka: "Vidaloka", serif;
+}

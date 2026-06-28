@@ -2,4 +2,6 @@ node_modules/
 .next/
 *.db
 .env.local
-public/uploads/
+# Ignore user-uploaded files (avatars etc) but keep static website images
+public/uploads/avatars/
+public/uploads/posts/
